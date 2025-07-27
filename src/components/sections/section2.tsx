@@ -3,17 +3,28 @@ import {useGetDataPlans} from "@/hooks/purchase.ts";
 import {useState} from "react";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import type {VariationData} from "@/types";
+import {Button} from "@/components/ui/button.tsx";
+import {ArrowLeft, ArrowRight} from "lucide-react";
 
 
 const Section2 = () => {
     const [fullData,setFullData] = useState(false)
-    const {network,setEnabled,setPlan,dataPlan} = useformState();
+    const {currentStep,handleStepChange,network,setPlan,dataPlan} = useformState();
     const {data:dataPlans,isLoading} = useGetDataPlans(network);
 
+    const handleNext = ()=>{
+        if (currentStep < 6){
+            handleStepChange(currentStep + 1,"forward");
+        }
 
+    }
+    const handleBack = ()=>{
+        if(currentStep > 1){
+            handleStepChange(currentStep  - 1,"backward");
+        }
+    }
 const plans:VariationData[] = dataPlans?.variations;
 const handleClick = (plan:VariationData)=>{
-    setEnabled(true);
     setPlan(plan.variationCode);
 }
 
@@ -25,11 +36,12 @@ const actualData = fullData?plans:plans?.slice(0,5);
             <div>
                 {
                    isLoading? (
-                       <div>
+                       <div className={'flex justify-center items-center flex-col gap-5'}>
                            {
                                [...Array(5)].map((_,index)=>(
-                                   <div key={index} className={"w-full h-20"}>
-                                       <Skeleton/>
+                                   <div key={index} className={"w-[250px] border flex flex-col items-center p-5  rounded-md w- h-20 justify-start"}>
+                                       <Skeleton className={'w-[200px] h-[50px]'}/>
+                                       <Skeleton className={'w-10 h-5'}/>
                                    </div>
                                ))
                            }
@@ -55,6 +67,25 @@ const actualData = fullData?plans:plans?.slice(0,5);
                    )
                 }
             </div>
+            <div className={"flex mt-6 justify-evenly items-center"}>
+                <Button
+                    disabled={currentStep === 1}
+                    className={"cursor-pointer"} onClick={handleBack}>
+                    <ArrowLeft className={"w-6 h-6"}/>
+                    Back
+                </Button>
+
+                <Button
+                    disabled={!dataPlan || dataPlan === ""}
+                    onClick={() => {
+                        handleNext()
+                    }}
+                    className={"mx-auto m-5 cursor-pointer"}
+
+                >Next <ArrowRight/></Button>
+
+            </div>
+
         </div>
     )
 }

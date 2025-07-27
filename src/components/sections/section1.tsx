@@ -5,12 +5,24 @@ import mobile from "@/assets/mobile.jpeg";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {useGetNetworks} from "@/hooks/purchase.ts";
 import {useformState} from "@/store";
+import {Button} from "@/components/ui/button.tsx";
+import {ArrowLeft,ArrowRight} from "lucide-react";
 
 const Section1 = ()=>{
 
-    const {network,setNetwork,setEnabled} = useformState();
+    const {handleStepChange,currentStep,network,setNetwork,setEnabled} = useformState();
 
+    const handleNext = ()=>{
+        if (currentStep < 6){
+            handleStepChange(currentStep + 1,"forward");
+        }
 
+    }
+    const handleBack = ()=>{
+        if(currentStep > 1){
+            handleStepChange(currentStep  - 1,"backward");
+        }
+    }
     const {data:providersData,isLoading,isError} = useGetNetworks();
     const providers = {
    airtel: {
@@ -107,6 +119,25 @@ const Section1 = ()=>{
 
 
             }
+            <div className={"flex mt-7 justify-evenly items-center"}>
+                <Button
+                    disabled={currentStep === 1}
+                    className={"cursor-pointer"} onClick={handleBack}>
+                    <ArrowLeft className={"w-6 h-6"}/>
+                    Back
+                </Button>
+
+                <Button
+                    disabled={!network || network === ""}
+                    onClick={() => {
+                        handleNext()
+                    }}
+                    className={"mx-auto m-5 cursor-pointer"}
+
+                >Next <ArrowRight/></Button>
+
+            </div>
+
 
         </div>
     )

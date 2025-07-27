@@ -1,6 +1,7 @@
 const baseUrl = "http://localhost:8080";
 import axios from "axios";
 import {toast} from "sonner"
+import type {buyData} from "@/types";
 
 export const getNetworks = async()=>{
     try{
@@ -42,4 +43,18 @@ export const getDataPlans = async(params:string)=>{
         }
         throw error
     }
+}
+export const BuyData = async(params:buyData)=>{
+try{
+    const response = await axios.post(`${baseUrl}/purchase/buy-data`,
+        params
+        );
+    return response.data;
+}
+catch(error){
+    if(axios.isAxiosError(error)){
+        toast.error(error.response?.data?.message || "Something went wrong")
+    }
+    throw error
+}
 }

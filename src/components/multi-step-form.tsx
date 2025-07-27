@@ -1,29 +1,18 @@
 import Section1 from "./sections/section1.tsx"
 import Section2 from "./sections/section2.tsx"
 import Section3 from "./sections/section3.tsx";
-import {Button} from "@/components/ui/button.tsx";
+import Section4 from "./sections/section4.tsx";
 import {motion,AnimatePresence} from "framer-motion";
 import {ProgressIndicator} from "@/components/progress-indicator.tsx";
 import {useformState} from "@/store";
 
 const MultiStepForm = () => {
 
-    const {direction,currentStep,handleStepChange,enabled} = useformState();
-    const handleNext = ()=>{
-        if (currentStep < 6){
-            handleStepChange(currentStep + 1,"forward");
-        }
-
-    }
-    const handleBack = ()=>{
-        if(currentStep > 1){
-            handleStepChange(currentStep  - 1,"backward");
-        }
-    }
+    const {direction,currentStep} = useformState();
 
     const slideVariants = {
         enter:(direction:string)=>({
-            x: direction === "forward" ? "100%" : "-100%",
+            x: direction === "forward" ? "-100%" : "100%",
             opacity:0.5
         }),
         center:{
@@ -31,14 +20,14 @@ const MultiStepForm = () => {
             x:0,
         },
         leave:(direction:string)=>({
-            x: direction === "backward" ? "-100%" : "100%",
+            x: direction === "backward" ? "100%" : "-100%",
             opacity:0.5
         })
 
 
     }
     return(
-        <section className={'min-h-screen flex flex-col justify-center items-center'}>
+        <section className={'min-h-screen flex overflow-x-auto flex-col justify-center items-center'}>
             <ProgressIndicator/>
             <main>
                 <AnimatePresence mode={"wait"} custom={direction} initial={false}>
@@ -103,7 +92,7 @@ const MultiStepForm = () => {
                                             opacity: { duration: 0.2 },
                                         }}
                             >
-                                <Section1/>
+                                <Section4/>
                             </motion.div>
                         )
                     }
@@ -126,23 +115,6 @@ const MultiStepForm = () => {
 
                 </AnimatePresence>
 
-
-
-                <div className={"flex justify-evenly items-center"}>
-                    <Button
-                        disabled={currentStep === 1}
-                        className={"cursor-pointer"} onClick={handleBack}>
-                        Back
-                    </Button>
-                    <Button
-                        disabled={!enabled}
-                        onClick={() => {
-                            handleNext()
-                        }}
-                        className={"mx-auto m-5 cursor-pointer"}
-
-                    >Next</Button>
-                </div>
 
 
             </main>

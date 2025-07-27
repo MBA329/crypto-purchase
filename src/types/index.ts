@@ -23,3 +23,10 @@ export interface DataPlans{
     serviceName:string;
     variations:VariationData[];
 }
+export interface buyData{
+    phoneNumber:string;
+    network:string;
+    billersCode:string;
+    dataPlanCode:string;
+    cryptoCurrency:string;
+}

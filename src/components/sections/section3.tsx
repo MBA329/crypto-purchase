@@ -4,10 +4,23 @@ import tronimg from "@/assets/trximg.png";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {useGetCurrency} from "@/hooks/purchase.ts";
 import {useformState} from "@/store";
+import {Button} from "@/components/ui/button.tsx";
+import {ArrowLeft, ArrowRight} from "lucide-react";
 
 const Section3 = ()=>{
+    const {currentStep,handleStepChange,currency,setCurrency} = useformState();
+    const handleNext = ()=>{
+        if (currentStep < 6){
+            handleStepChange(currentStep + 1,"forward");
+        }
 
-    const {currency,setCurrency} = useformState();
+    }
+    const handleBack = ()=>{
+        if(currentStep > 1){
+            handleStepChange(currentStep  - 1,"backward");
+        }
+    }
+
 
     const {data:coinData,isLoading,isError} = useGetCurrency();
     const coins = {
@@ -95,7 +108,27 @@ const Section3 = ()=>{
 
             }
 
+            <div className={"flex justify-evenly items-center"}>
+                <Button
+                    disabled={currentStep === 1}
+                    className={"cursor-pointer"} onClick={handleBack}>
+                    <ArrowLeft className={"w-6 h-6"}/>
+                    Back
+                </Button>
+
+                <Button
+                    disabled={!currency || currency === ""}
+                    onClick={() => {
+                        handleNext()
+                    }}
+                    className={"mx-auto m-5 cursor-pointer"}
+
+                >Next <ArrowRight/></Button>
+
+            </div>
+
         </div>
+
     )
 }
 export default Section3
