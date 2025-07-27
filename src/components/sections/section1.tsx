@@ -2,17 +2,16 @@ import glo from "@/assets/glo.png"
 import airtel from "@/assets/airtel.png"
 import mtn from "@/assets/mtn.jpg";
 import mobile from "@/assets/mobile.jpeg";
-import {Button} from "@/components/ui/button.tsx";
 import {Skeleton} from "@/components/ui/skeleton.tsx";
 import {useGetNetworks} from "@/hooks/purchase.ts";
-import {useState} from "react";
+import {useformState} from "@/store";
 
 const Section1 = ()=>{
 
-    const [icon,setIcon] = useState("");
-    const [direction,setDirection] = useState<"forward" | "backward">("forward");
+    const {network,setNetwork,setEnabled} = useformState();
 
-    const {data:providersData,isLoading} = useGetNetworks();
+
+    const {data:providersData,isLoading,isError} = useGetNetworks();
     const providers = {
    airtel: {
         id:"airtel",
@@ -49,7 +48,7 @@ const Section1 = ()=>{
     }
 ,
    etisalat: {
-        id:"mobile",
+        id:"etisalat",
             image
     :
         mobile,
@@ -66,42 +65,48 @@ const Section1 = ()=>{
      Select a service provider
 </h1>
             {
-                isLoading ? (<div className={'flex flex-col md:flex-row items-center justify-center'}>
+                isLoading ? (<div className={'flex flex-col md:flex-row gap-2 items-center justify-center'}>
                     {
                         [...Array(4)].map((_,index)=>(
-                            <div key={index} className={"border flex flex-col rounded p-4 size-[100px]"}>
+                            <div key={index} className={"border flex flex-col justify-center gap-2 rounded-md p-4 size-[100px]"}>
                                 <Skeleton className={"w-full size-[70px]"}/>
-                                <Skeleton className={"w-full h-3"}/>
+                                <Skeleton className={"w-15 h-4"}/>
                             </div>
                         ))
                     }
                 </div>) : (
                     <div className={"grid grid-cols-2 gap-9 md:gap-1 md:grid-cols-4 place-items-center   justify-center "}>
                         {
-                           providersData.map((provider:string)=>{
-                               const network = providers[provider as keyof typeof providers]
-                               if(!network) return null;
+                           providersData?.map((provider:string)=>{
+                               const net = providers[provider as keyof typeof providers]
+                               if(!net) return null;
                                return (
                                    <div
                                        onClick={()=>{
-                                           setIcon(network.id)
+                                           setNetwork(net.id)
+                                           setEnabled(true)
                                        }}
-                                       key={provider} className={`border-4 rounded size-[120px] shadow-lg md:size-[250px] flex justify-center flex-col items-center ${icon === network.id ? network.border : ""} cursor-pointer hover:opacity-98 transition-all`}>
-                                       <img src={network.image} alt="omo" className={'size-[70px] md:size-[200px]'}/>
-                                       <p className={""}>{network.name}</p>
+                                       key={provider} className={`border-4 rounded size-[120px] shadow-lg md:size-[250px] flex justify-center flex-col items-center ${network === net.id ? net.border : ""} cursor-pointer hover:opacity-98 transition-all`}>
+                                       <img src={net.image} alt="omo" className={'size-[70px] md:size-[200px]'}/>
+                                       <p className={""}>{net.name}</p>
                                    </div>
-
                                )
                                }
                            )
                         }
                     </div>
                 )
+
             }
-        <Button
-            className={"mx-auto m-5 cursor-pointer"}
-        disabled={!icon}
-        >Next</Button>
+            {
+                isError && (
+                    <div className={"text-center text-red-500 text-lg"}>
+                        <p>Failed to load Resource check your connection</p>
+                    </div>
+                )
+
+
+            }
 
         </div>
     )

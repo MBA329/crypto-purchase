@@ -3,7 +3,7 @@ import Quidax from "@/assets/quidax.png"
 import {Button} from "@/components/ui/button";
 export const Hero =()=>{
     return(
-        <section className={'bg-gray-100 min-w-screen min-h-screen flex justify-between items-center p-10'}>
+        <section className={'bg-gray-100 min-w-screen min-h-screen flex justify-center items-center p-10'}>
             <main className={'flex flex-col items-center text-center md:text-left justify-center md:flex-row'}>
                 <motion.div
                     initial={{opacity:0,y:-50}}
