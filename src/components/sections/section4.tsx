@@ -44,7 +44,7 @@ const [value,setValue] = useState<string>("")
             <PhoneInput
                 placeholder="Enter phone number"
                 value={value}
-                onChange={()=>setValue}
+                onChange={(phoneNumber)=>setValue(phoneNumber || "")}
                 className={"w-[230px] rounded-md p-2 border-2 border-gray-900 focus:outline-none"}
             />
 

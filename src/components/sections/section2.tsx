@@ -38,10 +38,10 @@ const actualData = fullData?plans:plans?.slice(0,5);
                    isLoading? (
                        <div className={'flex justify-center items-center flex-col gap-5'}>
                            {
-                               [...Array(5)].map((_,index)=>(
+                               [...Array(4)].map((_,index)=>(
                                    <div key={index} className={"w-[250px] border flex flex-col items-center p-5  rounded-md w- h-20 justify-start"}>
                                        <Skeleton className={'w-[200px] h-[50px]'}/>
-                                       <Skeleton className={'w-10 h-5'}/>
+                                       <Skeleton className={'w-10 mt-2 h-5'}/>
                                    </div>
                                ))
                            }
